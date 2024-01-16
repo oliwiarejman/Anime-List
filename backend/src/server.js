@@ -13,11 +13,28 @@ mongoose.connect("mongodb://localhost:27017/anime_database", {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
-const db = mongoose.connection;
 
-db.on("error", console.error.bind(console, "Błąd połączenia z MongoDB:"));
-db.once("open", function () {
-  console.log("Połączono z MongoDB");
+const animeDB = mongoose.connection;
+animeDB.on(
+  "error",
+  console.error.bind(console, "Błąd połączenia z anime_database:")
+);
+animeDB.once("open", function () {
+  console.log("Połączono z anime_database");
+});
+
+mongoose.connect("mongodb://localhost:27017/user_database", {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
+
+const userDB = mongoose.connection;
+userDB.on(
+  "error",
+  console.error.bind(console, "Błąd połączenia z user_database:")
+);
+userDB.once("open", function () {
+  console.log("Połączono z user_database");
 });
 
 const Anime = require("./models/animeModel");

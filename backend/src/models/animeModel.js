@@ -6,6 +6,7 @@ const AnimeSchema = new mongoose.Schema({
   characters: [{ name: String, role: String }],
   releaseDate: { type: Date },
   description: { type: String },
+  image: { type: String },
 });
 
 const Anime = mongoose.model("Anime", AnimeSchema);
