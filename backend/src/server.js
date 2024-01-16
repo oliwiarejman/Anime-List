@@ -2,6 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const animeRoutes = require("./routes/animeRoutes");
+const userRoutes = require("./routes/userRoutes");
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -37,11 +38,8 @@ userDB.once("open", function () {
   console.log("Połączono z user_database");
 });
 
-const Anime = require("./models/animeModel");
-const User = require("./models/userModel");
-const Review = require("./models/reviewModel");
-
-app.use("/api", animeRoutes);
+app.use("/api/anime", animeRoutes);
+app.use("/api/users", userRoutes);
 
 app.listen(port, () => {
   console.log(`Serwer nasłuchuje na porcie ${port}`);
