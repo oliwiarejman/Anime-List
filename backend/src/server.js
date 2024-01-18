@@ -10,36 +10,36 @@ const port = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 
-mongoose.connect("mongodb://localhost:27017/anime_database", {
+mongoose.connect("mongodb://localhost:27017/Anime-List", {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
 
-const animeDB = mongoose.connection;
-animeDB.on(
-  "error",
-  console.error.bind(console, "Błąd połączenia z anime_database:")
-);
-animeDB.once("open", function () {
-  console.log("Połączono z anime_database");
+const db = mongoose.connection;
+
+db.on("error", console.error.bind(console, "Błąd połączenia z bazą danych:"));
+db.once("open", function () {
+  console.log("Połączono z bazą danych Anime-List");
+
+  mongoose.connection.db.createCollection(
+    "anime_database",
+    function (err, collection) {
+      if (err) throw err;
+      console.log("Kolekcja 'anime_database' została utworzona.");
+    }
+  );
+
+  mongoose.connection.db.createCollection(
+    "user_database",
+    function (err, collection) {
+      if (err) throw err;
+      console.log("Kolekcja 'user_database' została utworzona.");
+    }
+  );
 });
 
-mongoose.connect("mongodb://localhost:27017/user_database", {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
-
-const userDB = mongoose.connection;
-userDB.on(
-  "error",
-  console.error.bind(console, "Błąd połączenia z user_database:")
-);
-userDB.once("open", function () {
-  console.log("Połączono z user_database");
-});
-
-app.use("/api/anime", animeRoutes);
-app.use("/api/users", userRoutes);
+app.use("/api/anime_database", animeRoutes);
+app.use("/api/users_database", userRoutes);
 
 app.listen(port, () => {
   console.log(`Serwer nasłuchuje na porcie ${port}`);
