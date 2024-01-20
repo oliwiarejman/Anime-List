@@ -7,7 +7,6 @@ const AnimeSchema = new mongoose.Schema({
   releaseDate: { type: Date },
   description: { type: String },
   image: { type: String },
-  animeId: { type: String, unique: true, required: true },
 });
 
 const Anime = mongoose.model("Anime", AnimeSchema);
