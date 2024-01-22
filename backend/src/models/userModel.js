@@ -6,6 +6,15 @@ const UserSchema = new mongoose.Schema({
   email: { type: String, unique: true, required: true },
   password: { type: String, required: true },
   role: { type: String, enum: ["user", "admin"], default: "user" },
+  watchlist: [
+    { type: mongoose.Schema.Types.ObjectId, ref: "Anime", default: [] },
+  ],
+  favorites: [
+    { type: mongoose.Schema.Types.ObjectId, ref: "Anime", default: [] },
+  ],
+  ignored: [
+    { type: mongoose.Schema.Types.ObjectId, ref: "Anime", default: [] },
+  ],
 });
 
 UserSchema.pre("save", async function (next) {

@@ -95,3 +95,54 @@ exports.loginUser = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+exports.addToWatchlist = async (req, res) => {
+  const animeId = req.params.id;
+  const userId = req.user.userId;
+
+  try {
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      { $addToSet: { watchlist: animeId } },
+      { new: true }
+    );
+
+    res.json(updatedUser.watchlist);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+exports.addToFavorites = async (req, res) => {
+  const animeId = req.params.id;
+  const userId = req.user.userId;
+
+  try {
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      { $addToSet: { favorites: animeId } },
+      { new: true }
+    );
+
+    res.json(updatedUser.favorites);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+exports.addToIgnored = async (req, res) => {
+  const animeId = req.params.id;
+  const userId = req.user.userId;
+
+  try {
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      { $addToSet: { ignored: animeId } },
+      { new: true }
+    );
+
+    res.json(updatedUser.ignored);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};

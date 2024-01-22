@@ -7,7 +7,14 @@ const AnimeSchema = new mongoose.Schema({
   releaseDate: { type: Date },
   description: { type: String },
   image: { type: String },
+  ratings: [{ type: Number }],
+  averageRating: { type: Number, default: 0 },
 });
+
+AnimeSchema.methods.calculateAverageRating = function () {
+  const sum = this.ratings.reduce((acc, rating) => acc + rating, 0);
+  this.averageRating = sum / this.ratings.length || 0;
+};
 
 const Anime = mongoose.model("Anime", AnimeSchema);
 

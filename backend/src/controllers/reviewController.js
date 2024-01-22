@@ -1,4 +1,5 @@
 const Review = require("../models/reviewModel");
+const Anime = require("../models/animeModel");
 
 exports.getAllReviews = async (req, res) => {
   try {
@@ -23,15 +24,38 @@ exports.getReviewById = async (req, res) => {
 };
 
 exports.createReview = async (req, res) => {
-  const review = new Review(req.body);
+  const { userId, animeId, rating, comment } = req.body;
 
   try {
-    const newReview = await review.save();
-    res.status(201).json(newReview);
+    const review = new Review({ userId, animeId, rating, comment });
+    await review.save();
+
+    const allReviews = await Review.find({ animeId });
+
+    const ratings = allReviews.map((review) => review.rating);
+    const averageRating = calculateAverageRating(ratings);
+
+    const updatedAnime = await Anime.findByIdAndUpdate(
+      animeId,
+      { $set: { ratings, averageRating } },
+      { new: true }
+    );
+
+    res.json(updatedAnime);
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    res.status(500).json({ message: error.message });
   }
 };
+
+function calculateAverageRating(ratings) {
+  if (ratings.length === 0) {
+    return 0;
+  }
+
+  const sum = ratings.reduce((total, rating) => total + rating, 0);
+  const average = sum / ratings.length;
+  return parseFloat(average.toFixed(2));
+}
 
 exports.updateReview = async (req, res) => {
   try {
