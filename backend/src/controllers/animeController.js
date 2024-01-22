@@ -77,3 +77,25 @@ exports.deleteAnime = async (req, res) => {
     res.status(403).json({ message: "Unauthorized - Admin only" });
   }
 };
+
+exports.searchAnime = async (req, res) => {
+  try {
+    const { title, genre } = req.query;
+
+    let query = {};
+
+    if (title) {
+      query.title = new RegExp(title, "i");
+    }
+
+    if (genre) {
+      query.genre = genre;
+    }
+
+    const results = await Anime.find(query);
+
+    res.json(results);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
