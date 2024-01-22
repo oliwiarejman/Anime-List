@@ -1,22 +1,22 @@
 const jwt = require("jsonwebtoken");
 
 module.exports = (req, res, next) => {
-  const token = req.header("Authorization");
+  const authHeader = req.header("Authorization");
+  const token = authHeader && authHeader.split(" ")[1];
 
   if (!token) {
     return res.status(401).json({ message: "Authorization denied" });
   }
 
+  console.log("Received token:", token);
+
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = decoded.user;
-
-    if (req.user.role !== "admin") {
-      return res.status(403).json({ message: "Unauthorized - Admin only" });
-    }
+    req.user = decoded;
 
     next();
   } catch (error) {
+    console.error("Error verifying token:", error);
     res.status(401).json({ message: "Token is not valid" });
   }
 };

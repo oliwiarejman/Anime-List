@@ -23,42 +23,57 @@ exports.getAnimeById = async (req, res) => {
 };
 
 exports.createAnime = async (req, res) => {
-  const anime = new Anime(req.body);
+  console.log("User information:", req.user);
 
-  try {
-    const newAnime = await anime.save();
-    res.status(201).json(newAnime);
-  } catch (error) {
-    res.status(400).json({ message: error.message });
+  if (req.user && req.user.role === "admin") {
+    const anime = new Anime(req.body);
+
+    try {
+      const newAnime = await anime.save();
+      res.status(201).json(newAnime);
+    } catch (error) {
+      res.status(400).json({ message: error.message });
+    }
+  } else {
+    console.log("Unauthorized - Admin only");
+    res.status(403).json({ message: "Unauthorized - Admin only" });
   }
 };
 
 exports.updateAnime = async (req, res) => {
-  try {
-    const updatedAnime = await Anime.findByIdAndUpdate(
-      req.params.id,
-      req.body,
-      { new: true }
-    );
-    if (updatedAnime) {
-      res.json(updatedAnime);
-    } else {
-      res.status(404).json({ message: "Anime not found" });
+  if (req.user && req.user.role === "admin") {
+    try {
+      const updatedAnime = await Anime.findByIdAndUpdate(
+        req.params.id,
+        req.body,
+        { new: true }
+      );
+      if (updatedAnime) {
+        res.json(updatedAnime);
+      } else {
+        res.status(404).json({ message: "Anime not found" });
+      }
+    } catch (error) {
+      res.status(400).json({ message: error.message });
     }
-  } catch (error) {
-    res.status(400).json({ message: error.message });
+  } else {
+    res.status(403).json({ message: "Unauthorized - Admin only" });
   }
 };
 
 exports.deleteAnime = async (req, res) => {
-  try {
-    const deletedAnime = await Anime.findByIdAndDelete(req.params.id);
-    if (deletedAnime) {
-      res.json({ message: "Anime deleted" });
-    } else {
-      res.status(404).json({ message: "Anime not found" });
+  if (req.user && req.user.role === "admin") {
+    try {
+      const deletedAnime = await Anime.findByIdAndDelete(req.params.id);
+      if (deletedAnime) {
+        res.json({ message: "Anime deleted" });
+      } else {
+        res.status(404).json({ message: "Anime not found" });
+      }
+    } catch (error) {
+      res.status(500).json({ message: error.message });
     }
-  } catch (error) {
-    res.status(500).json({ message: error.message });
+  } else {
+    res.status(403).json({ message: "Unauthorized - Admin only" });
   }
 };
