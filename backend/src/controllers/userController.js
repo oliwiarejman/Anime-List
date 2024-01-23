@@ -1,4 +1,5 @@
 const User = require("../models/userModel");
+const Anime = require("../models/animeModel");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
@@ -138,6 +139,108 @@ exports.addToIgnored = async (req, res) => {
     const updatedUser = await User.findByIdAndUpdate(
       userId,
       { $addToSet: { ignored: animeId } },
+      { new: true }
+    );
+
+    res.json(updatedUser.ignored);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+exports.getWatchlist = async (req, res) => {
+  const userId = req.params.id;
+
+  try {
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const watchlist = await Anime.find({ _id: { $in: user.watchlist } });
+
+    res.json(watchlist);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+exports.getFavorites = async (req, res) => {
+  const userId = req.params.id;
+
+  try {
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const favorites = await Anime.find({ _id: { $in: user.favorites } });
+
+    res.json(favorites);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+exports.getIgnored = async (req, res) => {
+  const userId = req.params.id;
+
+  try {
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const ignored = await Anime.find({ _id: { $in: user.ignored } });
+
+    res.json(ignored);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+exports.removeFromWatchlist = async (req, res) => {
+  const animeId = req.params.id;
+  const userId = req.user.userId;
+
+  try {
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      { $pull: { watchlist: animeId } },
+      { new: true }
+    );
+
+    res.json(updatedUser.watchlist);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+exports.removeFromFavorites = async (req, res) => {
+  const animeId = req.params.id;
+  const userId = req.user.userId;
+
+  try {
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      { $pull: { favorites: animeId } },
+      { new: true }
+    );
+
+    res.json(updatedUser.favorites);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+exports.removeFromIgnored = async (req, res) => {
+  const animeId = req.params.id;
+  const userId = req.user.userId;
+
+  try {
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      { $pull: { ignored: animeId } },
       { new: true }
     );
 

@@ -12,5 +12,23 @@ router.post("/login", userController.loginUser);
 router.post("/:id/watchlist", authMiddleware, userController.addToWatchlist);
 router.post("/:id/favorites", authMiddleware, userController.addToFavorites);
 router.post("/:id/ignored", authMiddleware, userController.addToIgnored);
+router.get("/:id/watchlist", authMiddleware, userController.getWatchlist);
+router.get("/:id/favorites", authMiddleware, userController.getFavorites);
+router.get("/:id/ignored", authMiddleware, userController.getIgnored);
+router.delete(
+  "/:id/watchlist/:animeId",
+  authMiddleware,
+  userController.removeFromWatchlist
+);
+router.delete(
+  "/:id/favorites/:animeId",
+  authMiddleware,
+  userController.removeFromFavorites
+);
+router.delete(
+  "/:id/ignored/:animeId",
+  authMiddleware,
+  userController.removeFromIgnored
+);
 
 module.exports = router;
