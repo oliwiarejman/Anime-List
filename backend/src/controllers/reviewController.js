@@ -86,3 +86,14 @@ exports.deleteReview = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+exports.getReviewsByAnimeId = async (req, res) => {
+  const animeId = req.params.animeId;
+
+  try {
+    const reviews = await Review.find({ animeId });
+    res.json(reviews);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
