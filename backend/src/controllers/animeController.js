@@ -79,21 +79,31 @@ exports.deleteAnime = async (req, res) => {
 };
 
 exports.searchAnime = async (req, res) => {
+  const { title, genre, rating, sortOrder } = req.query;
+  const query = {};
+
+  if (title) {
+    query.title = { $regex: title, $options: "i" };
+  }
+
+  if (genre) {
+    query.genre = { $regex: genre, $options: "i" };
+  }
+
+  if (rating) {
+    query.averageRating = { $gte: parseFloat(rating) };
+  }
+
+  let sortDirection = 1;
+
+  if (sortOrder && sortOrder.toLowerCase() === "desc") {
+    sortDirection = -1;
+  }
+
   try {
-    const { title, genre } = req.query;
-
-    let query = {};
-
-    if (title) {
-      query.title = new RegExp(title, "i");
-    }
-
-    if (genre) {
-      query.genre = genre;
-    }
-
-    const results = await Anime.find(query);
-
+    const results = await Anime.find(query).sort({
+      averageRating: sortDirection,
+    });
     res.json(results);
   } catch (error) {
     res.status(500).json({ message: error.message });

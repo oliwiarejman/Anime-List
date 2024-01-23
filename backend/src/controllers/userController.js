@@ -55,6 +55,10 @@ exports.updateUser = async (req, res) => {
 
 exports.deleteUser = async (req, res) => {
   try {
+    if (req.user.role !== "admin") {
+      return res.status(403).json({ message: "Unauthorized - Admin only" });
+    }
+
     const deletedUser = await User.findByIdAndDelete(req.params.id);
     if (deletedUser) {
       res.json({ message: "User deleted" });
@@ -98,7 +102,7 @@ exports.loginUser = async (req, res) => {
 };
 
 exports.addToWatchlist = async (req, res) => {
-  const animeId = req.params.id;
+  const animeId = req.body.animeId;
   const userId = req.user.userId;
 
   try {

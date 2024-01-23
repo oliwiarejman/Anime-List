@@ -76,6 +76,10 @@ exports.updateReview = async (req, res) => {
 
 exports.deleteReview = async (req, res) => {
   try {
+    if (req.user.role !== "admin") {
+      return res.status(403).json({ message: "Unauthorized - Admin only" });
+    }
+
     const deletedReview = await Review.findByIdAndDelete(req.params.id);
     if (deletedReview) {
       res.json({ message: "Review deleted" });
