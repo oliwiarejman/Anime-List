@@ -4,7 +4,8 @@ import { useNavigate } from "react-router-dom";
 const HomePage = () => {
   const navigate = useNavigate();
   const handleLogin = (c) => {
-    window.localStorage.setItem("token", c.token);
+    // window.localStorage.setItem("token", c.token);
+    // window.localStorage.setItem("userId", c.userId);
     console.log("Użytkownik zalogowany!", c);
     navigate("/");
   };

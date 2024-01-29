@@ -22,13 +22,22 @@ const LoginForm = ({ onLogin }) => {
         credentials
       );
 
-      if (response.status === 200) {
-        const user = response.data.user;
-        const token = response.data.token;
+      console.log("Response from server:", response);
 
-        onLogin({ user, token });
+      const { status, data } = response;
+
+      if (status === 200 && data.userId) {
+        const { userId, token } = data;
+
+        console.log("userId from server:", userId);
+
+        window.localStorage.setItem("userId", userId);
+        window.localStorage.setItem("token", token);
+
+        onLogin({ userId, token });
       } else {
-        console.log("Błąd logowania");
+        console.error("Błąd logowania");
+        setError("Invalid email or password");
       }
     } catch (error) {
       console.error("Błąd logowania:", error.message);
