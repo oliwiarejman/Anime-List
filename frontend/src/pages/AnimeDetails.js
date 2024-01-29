@@ -5,6 +5,7 @@ import axios from "axios";
 const AnimeDetails = () => {
   const { animeId } = useParams();
   const [animeDetails, setAnimeDetails] = useState(null);
+  const [reviews, setReviews] = useState([]);
 
   useEffect(() => {
     const fetchAnimeDetails = async () => {
@@ -13,8 +14,28 @@ const AnimeDetails = () => {
           `http://localhost:3000/api/anime/${animeId}`
         );
         setAnimeDetails(response.data);
+
+        const reviewsResponse = await axios.get(
+          `http://localhost:3000/api/reviews/anime/${animeId}`
+        );
+
+        const usersResponse = await Promise.all(
+          reviewsResponse.data.map((review) =>
+            axios.get(`http://localhost:3000/api/users/${review.userId}`)
+          )
+        );
+
+        const reviewsWithUsers = reviewsResponse.data.map((review, index) => ({
+          ...review,
+          user: usersResponse[index].data,
+        }));
+
+        setReviews(reviewsWithUsers);
       } catch (error) {
-        console.error("Error fetching anime details:", error.message);
+        console.error(
+          "Error fetching anime details or reviews:",
+          error.message
+        );
       }
     };
 
@@ -32,7 +53,6 @@ const AnimeDetails = () => {
     releaseDate,
     description,
     image,
-    ratings,
     averageRating,
   } = animeDetails;
 
@@ -50,6 +70,19 @@ const AnimeDetails = () => {
         ))}
       </ul>
       <p>Average Rating: {averageRating}</p>
+
+      <h3>Reviews:</h3>
+      <ul>
+        {reviews.map((review) => (
+          <li key={review._id}>
+            <p>
+              {" "}
+              {review.user && review.user.username} | Rating: {review.rating}
+            </p>
+            {review.comment}
+          </li>
+        ))}
+      </ul>
     </div>
   );
 };

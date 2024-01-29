@@ -95,7 +95,7 @@ exports.getReviewsByAnimeId = async (req, res) => {
   const animeId = req.params.animeId;
 
   try {
-    const reviews = await Review.find({ animeId });
+    const reviews = await Review.find({ animeId }).populate("user", "username");
     res.json(reviews);
   } catch (error) {
     res.status(500).json({ message: error.message });
