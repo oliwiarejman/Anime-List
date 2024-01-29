@@ -6,7 +6,7 @@ const HomePage = () => {
   const handleLogin = (c) => {
     window.localStorage.setItem("token", c.token);
     console.log("Użytkownik zalogowany!", c);
-    navigate("/recipes");
+    navigate("/");
   };
 
   return (
