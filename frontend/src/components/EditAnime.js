@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { Formik, Form, Field, FieldArray } from "formik";
 import "../styles/formStyles.css";
 
-const AddAnime = () => {
+const EditAnime = ({ animeId }) => {
   const navigate = useNavigate();
   const token = window.localStorage.getItem("token");
 
@@ -19,8 +19,8 @@ const AddAnime = () => {
 
   const handleSubmit = async (values) => {
     try {
-      const response = await axios.post(
-        "http://localhost:3000/api/anime",
+      const response = await axios.put(
+        `http://localhost:3000/api/anime/${animeId}`,
         values,
         {
           headers: {
@@ -31,13 +31,19 @@ const AddAnime = () => {
 
       navigate(`/anime/${response.data._id}`);
     } catch (error) {
-      console.error("Error adding anime:", error.message);
+      console.error("Error editing anime:", error.message);
+    }
+  };
+
+  const handleDeleteCharacter = async (arrayHelpers, index) => {
+    if (window.confirm("Are you sure you want to delete this character?")) {
+      arrayHelpers.remove(index);
     }
   };
 
   return (
     <div>
-      <h2>Add Anime</h2>
+      <h2>Edit Anime</h2>
       <Formik initialValues={initialValues} onSubmit={handleSubmit}>
         {({ values }) => (
           <Form className="form-container">
@@ -70,12 +76,13 @@ const AddAnime = () => {
               {(arrayHelpers) => (
                 <div>
                   {values.characters.map((_, index) => (
-                    <div key={index}>
+                    <div key={index} style={{ marginBottom: "10px" }}>
                       <label>
                         Name:
                         <Field
                           type="text"
                           name={`characters.${index}.name`}
+                          required
                           className="form-input"
                         />
                       </label>
@@ -89,9 +96,11 @@ const AddAnime = () => {
                       </label>
                       <button
                         type="button"
-                        onClick={() => arrayHelpers.remove(index)}
+                        onClick={() =>
+                          handleDeleteCharacter(arrayHelpers, index)
+                        }
                       >
-                        Remove Character
+                        Delete Character
                       </button>
                     </div>
                   ))}
@@ -105,7 +114,7 @@ const AddAnime = () => {
               )}
             </FieldArray>
             <button type="submit" className="form-button">
-              Add Anime
+              Edit Anime
             </button>
           </Form>
         )}
@@ -114,4 +123,4 @@ const AddAnime = () => {
   );
 };
 
-export default AddAnime;
+export default EditAnime;

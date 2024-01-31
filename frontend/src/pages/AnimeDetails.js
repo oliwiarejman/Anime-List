@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import axios from "axios";
 
 const AnimeDetails = () => {
@@ -160,6 +160,7 @@ const AnimeDetails = () => {
     <div>
       <h2>{title}</h2>
       <img src={image} alt={`${title} Cover`} style={{ maxWidth: "100%" }} />
+      <p>Average Rating: {averageRating}</p>
       <p>Genre: {genre}</p>
       <p>Release Date: {releaseDate}</p>
       <p>Description: {description}</p>
@@ -169,7 +170,6 @@ const AnimeDetails = () => {
           <li key={index}>{`${character.name} - ${character.role}`}</li>
         ))}
       </ul>
-      <p>Average Rating: {averageRating}</p>
 
       <h3>Reviews:</h3>
       <ul>
@@ -190,6 +190,14 @@ const AnimeDetails = () => {
           </li>
         ))}
       </ul>
+      {isAdmin && (
+        <div>
+          <h3>Edit Anime:</h3>
+          <Link to={`/edit-anime/${animeId}`}>
+            <button>Edit</button>
+          </Link>
+        </div>
+      )}
 
       {isLoggedIn && (
         <div>
