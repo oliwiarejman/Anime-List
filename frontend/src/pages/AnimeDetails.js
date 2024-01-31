@@ -7,6 +7,7 @@ const AnimeDetails = () => {
   const [animeDetails, setAnimeDetails] = useState(null);
   const [reviews, setReviews] = useState([]);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
   const [commentData, setCommentData] = useState({
     rating: "",
     comment: "",
@@ -69,8 +70,17 @@ const AnimeDetails = () => {
     const userId = window.localStorage.getItem("userId");
     setIsLoggedIn(!!token);
 
-    console.log("Token:", token);
-    console.log("UserId:", userId);
+    if (userId) {
+      axios
+        .get(`http://localhost:3000/api/users/${userId}`)
+        .then((response) => {
+          const userRole = response.data.role;
+          setIsAdmin(userRole === "admin");
+        })
+        .catch((error) => {
+          console.error("Error fetching user role:", error.message);
+        });
+    }
   }, [animeId]);
 
   const handleAddComment = async (e) => {
@@ -78,9 +88,6 @@ const AnimeDetails = () => {
 
     const userId = window.localStorage.getItem("userId");
     const token = window.localStorage.getItem("token");
-
-    console.log("UserId (from localStorage):", userId);
-    console.log("Token (from localStorage):", token);
 
     try {
       const response = await axios.post(
@@ -116,6 +123,22 @@ const AnimeDetails = () => {
       });
     } catch (error) {
       console.error("Error adding comment:", error.message);
+    }
+  };
+
+  const handleDeleteComment = async (reviewId) => {
+    try {
+      await axios.delete(`http://localhost:3000/api/reviews/${reviewId}`, {
+        headers: {
+          Authorization: `Bearer ${window.localStorage.getItem("token")}`,
+        },
+      });
+
+      setReviews((prevReviews) =>
+        prevReviews.filter((review) => review._id !== reviewId)
+      );
+    } catch (error) {
+      console.error("Error deleting comment:", error.message);
     }
   };
 
@@ -159,6 +182,11 @@ const AnimeDetails = () => {
               | Rating: {review.rating}
             </p>
             {review.comment}
+            {isAdmin && (
+              <button onClick={() => handleDeleteComment(review._id)}>
+                Delete Comment
+              </button>
+            )}
           </li>
         ))}
       </ul>
