@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import "../styles/styles.css";
 
 const Ignored = () => {
   const [ignored, setIgnored] = useState([]);
@@ -26,15 +27,17 @@ const Ignored = () => {
   }, []);
 
   return (
-    <div>
-      <h2>Ignored</h2>
+    <div className="anime-list-container">
+      <h2 className="list-title">Ignored</h2>
       {error ? (
-        <p>Error fetching ignored list: {error}</p>
+        <p className="error-message">Error fetching ignored list: {error}</p>
       ) : (
-        <ul>
+        <ul className="anime-list">
           {ignored.map((anime) => (
-            <li key={anime._id}>
-              <Link to={`/anime/${anime._id}`}>{anime.title}</Link>
+            <li key={anime._id} className="anime-item">
+              <Link to={`/anime/${anime._id}`} className="anime-link">
+                {anime.title}
+              </Link>
             </li>
           ))}
         </ul>

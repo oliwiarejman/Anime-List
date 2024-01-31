@@ -1,8 +1,8 @@
-// Watchlist.js
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
-import { handleRemoveFromWatchlist } from "./AddToLists"; // Import funkcji do usuwania z listy
+import { handleRemoveFromWatchlist } from "./AddToLists";
+import "../styles/styles.css";
 
 const Watchlist = () => {
   const [watchlist, setWatchlist] = useState([]);
@@ -29,23 +29,27 @@ const Watchlist = () => {
 
   const removeFromWatchlist = async (animeId) => {
     await handleRemoveFromWatchlist(animeId);
-    // Aktualizacja lokalnej listy po usunięciu z bazy danych
     setWatchlist((prevList) =>
       prevList.filter((anime) => anime._id !== animeId)
     );
   };
 
   return (
-    <div>
-      <h2>Watchlist</h2>
+    <div className="anime-list-container">
+      <h2 className="list-title">Watchlist</h2>
       {error ? (
-        <p>Error fetching watchlist: {error}</p>
+        <p className="error-message">Error fetching watchlist: {error}</p>
       ) : (
-        <ul>
+        <ul className="anime-list">
           {watchlist.map((anime) => (
-            <li key={anime._id}>
-              <Link to={`/anime/${anime._id}`}>{anime.title}</Link>
-              <button onClick={() => removeFromWatchlist(anime._id)}>
+            <li key={anime._id} className="anime-item">
+              <Link to={`/anime/${anime._id}`} className="anime-link">
+                {anime.title}
+              </Link>
+              <button
+                onClick={() => removeFromWatchlist(anime._id)}
+                className="remove-button"
+              >
                 Remove from List
               </button>
             </li>

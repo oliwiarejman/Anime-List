@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import "../styles/styles.css";
 
 const AnimeList = () => {
   const [animeList, setAnimeList] = useState([]);
@@ -26,18 +27,21 @@ const AnimeList = () => {
   };
 
   return (
-    <div>
-      <h2>Lista Anime</h2>
+    <div className="anime-list-container">
+      <h2 className="list-title">Lista Anime</h2>
       <input
         type="text"
         placeholder="Wyszukaj według tytułu"
         value={searchTitle}
         onChange={handleSearchChange}
+        className="search-input"
       />
-      <ul>
+      <ul className="anime-list">
         {animeList.map((anime) => (
-          <li key={anime._id}>
-            <Link to={`/anime/${anime._id}`}>{anime.title}</Link>
+          <li key={anime._id} className="anime-item">
+            <Link to={`/anime/${anime._id}`} className="anime-link">
+              {anime.title}
+            </Link>
           </li>
         ))}
       </ul>
