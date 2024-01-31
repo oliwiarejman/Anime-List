@@ -1,5 +1,6 @@
 const Review = require("../models/reviewModel");
 const Anime = require("../models/animeModel");
+const User = require("../models/userModel");
 
 exports.getAllReviews = async (req, res) => {
   try {
@@ -27,8 +28,18 @@ exports.createReview = async (req, res) => {
   const { userId, animeId, rating, comment } = req.body;
 
   try {
-    const review = new Review({ userId, animeId, rating, comment });
+    console.log("Received review data:", { userId, animeId, rating, comment });
+
+    const user = await User.findById(userId);
+    if (!user) {
+      console.error("Error adding review: User not found");
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const review = new Review({ user: userId, animeId, rating, comment });
     await review.save();
+
+    console.log("Review added successfully");
 
     const allReviews = await Review.find({ animeId });
 
@@ -41,9 +52,12 @@ exports.createReview = async (req, res) => {
       { new: true }
     );
 
+    console.log("Anime updated successfully");
+
     res.json(updatedAnime);
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.error("Error adding review:", error.message);
+    res.status(500).json({ message: "Internal Server Error" });
   }
 };
 

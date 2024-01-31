@@ -25,15 +25,34 @@ const AnimeDetails = () => {
         );
 
         const usersResponse = await Promise.all(
-          reviewsResponse.data.map((review) =>
-            axios.get(`http://localhost:3000/api/users/${review.userId}`)
-          )
+          reviewsResponse.data.map(async (review) => {
+            try {
+              if (review.userId) {
+                const userResponse = await axios.get(
+                  `http://localhost:3000/api/users/${review.userId}`
+                );
+                return userResponse.data;
+              } else {
+                return null;
+              }
+            } catch (userError) {
+              console.error("Error fetching user details:", userError.message);
+              return null;
+            }
+          })
         );
 
-        const reviewsWithUsers = reviewsResponse.data.map((review, index) => ({
-          ...review,
-          user: usersResponse[index].data,
-        }));
+        const reviewsWithUsers = await Promise.all(
+          reviewsResponse.data.map(async (review, index) => {
+            const user = usersResponse[index];
+            if (user) {
+              const username = user.username;
+              return { ...review, user: { username } };
+            } else {
+              return review;
+            }
+          })
+        );
 
         setReviews(reviewsWithUsers);
       } catch (error) {
@@ -79,22 +98,17 @@ const AnimeDetails = () => {
         }
       );
 
-      const reviewsResponse = await axios.get(
-        `http://localhost:3000/api/reviews/anime/${animeId}`
+      const newReview = response.data;
+
+      const userResponse = await axios.get(
+        `http://localhost:3000/api/users/${userId}`
       );
+      const newUser = userResponse.data;
 
-      const usersResponse = await Promise.all(
-        reviewsResponse.data.map((review) =>
-          axios.get(`http://localhost:3000/api/users/${review.userId}`)
-        )
-      );
-
-      const reviewsWithUsers = reviewsResponse.data.map((review, index) => ({
-        ...review,
-        user: usersResponse[index].data,
-      }));
-
-      setReviews(reviewsWithUsers);
+      setReviews((prevReviews) => [
+        ...prevReviews,
+        { ...newReview, user: { username: newUser.username } },
+      ]);
 
       setCommentData({
         rating: "",
@@ -139,8 +153,10 @@ const AnimeDetails = () => {
         {reviews.map((review) => (
           <li key={review._id}>
             <p>
-              {" "}
-              {review.user && review.user.username} | Rating: {review.rating}
+              {review.user && review.user.username
+                ? review.user.username
+                : "Unknown User"}{" "}
+              | Rating: {review.rating}
             </p>
             {review.comment}
           </li>
