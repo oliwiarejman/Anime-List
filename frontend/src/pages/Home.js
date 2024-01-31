@@ -46,6 +46,20 @@ const Home = () => {
         </Link>
       )}
 
+      {isLoggedIn && (
+        <div>
+          <Link to="/watchlist">
+            <button>Watchlist</button>
+          </Link>
+          <Link to="/favorites">
+            <button>Favorites</button>
+          </Link>
+          <Link to="/ignored">
+            <button>Ignored</button>
+          </Link>
+        </div>
+      )}
+
       {isLoggedIn ? (
         <button onClick={handleLogout}>Logout</button>
       ) : (

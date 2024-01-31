@@ -6,6 +6,9 @@ import Register from "./pages/Register";
 import AnimeDetails from "./pages/AnimeDetails";
 import AddAnime from "./components/AddAnime";
 import EditAnime from "./components/EditAnime";
+import Watchlist from "./components/Watchlist";
+import Favorites from "./components/Favorites";
+import Ignored from "./components/Ignored";
 
 function App() {
   return (
@@ -17,6 +20,9 @@ function App() {
         <Route path="/anime/:animeId" element={<AnimeDetails />} />
         <Route path="/edit-anime/:animeId" element={<EditAnime />} />
         <Route path="/add-anime" element={<AddAnime />} />
+        <Route path="/watchlist" element={<Watchlist />} />
+        <Route path="/favorites" element={<Favorites />} />
+        <Route path="/ignored" element={<Ignored />} />
       </Routes>
     </Router>
   );
