@@ -17,17 +17,19 @@ router.get("/:id/watchlist", authMiddleware, userController.getWatchlist);
 router.get("/:id/favorites", authMiddleware, userController.getFavorites);
 router.get("/:id/ignored", authMiddleware, userController.getIgnored);
 router.delete(
-  "/:id/watchlist/:animeId",
+  "/watchlist/:animeId",
   authMiddleware,
   userController.removeFromWatchlist
 );
+
 router.delete(
-  "/:id/favorites/:animeId",
+  "/favorites/:animeId",
   authMiddleware,
   userController.removeFromFavorites
 );
+
 router.delete(
-  "/:id/ignored/:animeId",
+  "/ignored/:animeId",
   authMiddleware,
   userController.removeFromIgnored
 );

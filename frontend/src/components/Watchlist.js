@@ -1,6 +1,8 @@
+// Watchlist.js
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import { handleRemoveFromWatchlist } from "./AddToLists"; // Import funkcji do usuwania z listy
 
 const Watchlist = () => {
   const [watchlist, setWatchlist] = useState([]);
@@ -25,6 +27,14 @@ const Watchlist = () => {
       });
   }, []);
 
+  const removeFromWatchlist = async (animeId) => {
+    await handleRemoveFromWatchlist(animeId);
+    // Aktualizacja lokalnej listy po usunięciu z bazy danych
+    setWatchlist((prevList) =>
+      prevList.filter((anime) => anime._id !== animeId)
+    );
+  };
+
   return (
     <div>
       <h2>Watchlist</h2>
@@ -35,6 +45,9 @@ const Watchlist = () => {
           {watchlist.map((anime) => (
             <li key={anime._id}>
               <Link to={`/anime/${anime._id}`}>{anime.title}</Link>
+              <button onClick={() => removeFromWatchlist(anime._id)}>
+                Remove from List
+              </button>
             </li>
           ))}
         </ul>

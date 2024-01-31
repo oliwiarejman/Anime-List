@@ -119,7 +119,7 @@ exports.addToWatchlist = async (req, res) => {
 };
 
 exports.addToFavorites = async (req, res) => {
-  const animeId = req.params.id;
+  const animeId = req.body.animeId;
   const userId = req.user.userId;
 
   try {
@@ -136,7 +136,7 @@ exports.addToFavorites = async (req, res) => {
 };
 
 exports.addToIgnored = async (req, res) => {
-  const animeId = req.params.id;
+  const animeId = req.body.animeId;
   const userId = req.user.userId;
 
   try {
@@ -204,7 +204,7 @@ exports.getIgnored = async (req, res) => {
 };
 
 exports.removeFromWatchlist = async (req, res) => {
-  const animeId = req.params.id;
+  const animeId = req.params.animeId;
   const userId = req.user.userId;
 
   try {
@@ -221,7 +221,7 @@ exports.removeFromWatchlist = async (req, res) => {
 };
 
 exports.removeFromFavorites = async (req, res) => {
-  const animeId = req.params.id;
+  const animeId = req.params.animeId;
   const userId = req.user.userId;
 
   try {
@@ -238,7 +238,7 @@ exports.removeFromFavorites = async (req, res) => {
 };
 
 exports.removeFromIgnored = async (req, res) => {
-  const animeId = req.params.id;
+  const animeId = req.params.animeId;
   const userId = req.user.userId;
 
   try {

@@ -1,6 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import axios from "axios";
+import {
+  handleAddToWatchlist,
+  handleAddToFavorites,
+  handleAddToIgnored,
+} from "../components/AddToLists";
 
 const AnimeDetails = () => {
   const { animeId } = useParams();
@@ -170,7 +175,22 @@ const AnimeDetails = () => {
           <li key={index}>{`${character.name} - ${character.role}`}</li>
         ))}
       </ul>
-
+      <div>
+        <h3>Add to Lists:</h3>
+        {isLoggedIn && (
+          <div>
+            <button onClick={() => handleAddToWatchlist(animeDetails._id)}>
+              Add to Watchlist
+            </button>
+            <button onClick={() => handleAddToFavorites(animeDetails._id)}>
+              Add to Favorites
+            </button>
+            <button onClick={() => handleAddToIgnored(animeDetails._id)}>
+              Add to Ignored
+            </button>
+          </div>
+        )}
+      </div>
       <h3>Reviews:</h3>
       <ul>
         {reviews.map((review) => (
