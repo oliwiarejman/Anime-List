@@ -6,12 +6,14 @@ import "../styles/styles.css";
 const AnimeList = () => {
   const [animeList, setAnimeList] = useState([]);
   const [searchTitle, setSearchTitle] = useState("");
+  const [sortOrder, setSortOrder] = useState("asc");
+  const [page, setPage] = useState(1);
 
   useEffect(() => {
     const fetchAnimeList = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:3000/api/anime/search?title=${searchTitle}`
+          `http://localhost:3000/api/anime/search?title=${searchTitle}&sortOrder=${sortOrder}&page=${page}`
         );
         setAnimeList(response.data);
       } catch (error) {
@@ -20,10 +22,14 @@ const AnimeList = () => {
     };
 
     fetchAnimeList();
-  }, [searchTitle]);
+  }, [searchTitle, sortOrder, page]);
 
   const handleSearchChange = (e) => {
     setSearchTitle(e.target.value);
+  };
+
+  const handleSortChange = () => {
+    setSortOrder((prevSortOrder) => (prevSortOrder === "asc" ? "desc" : "asc"));
   };
 
   return (
@@ -36,6 +42,9 @@ const AnimeList = () => {
         onChange={handleSearchChange}
         className="search-input"
       />
+      <button className="list-button" onClick={handleSortChange}>
+        {sortOrder === "asc" ? "Descending" : "Ascending"}
+      </button>
       <ul className="anime-list">
         {animeList.map((anime) => (
           <li key={anime._id} className="anime-item">

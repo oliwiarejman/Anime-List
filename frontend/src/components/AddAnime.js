@@ -89,6 +89,7 @@ const AddAnime = () => {
                       </label>
                       <button
                         type="button"
+                        className="list-button"
                         onClick={() => arrayHelpers.remove(index)}
                       >
                         Remove Character
@@ -97,6 +98,7 @@ const AddAnime = () => {
                   ))}
                   <button
                     type="button"
+                    className="list-button"
                     onClick={() => arrayHelpers.push({ name: "", role: "" })}
                   >
                     Add Character
