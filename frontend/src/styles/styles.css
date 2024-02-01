@@ -296,6 +296,7 @@
   }
   
   .list-button {
+    margin-top: .5rem;
     background-color: #1a1a1a;
     color: #fff;
     border: none;

@@ -3,6 +3,8 @@ import axios from "axios";
 const handleAddToWatchlist = async (animeId) => {
   const token = window.localStorage.getItem("token");
 
+  window.confirm("Dodano do listy")
+
   try {
     await axios.post(
       "http://localhost:3000/api/users/watchlist",
@@ -34,6 +36,7 @@ const handleRemoveFromWatchlist = async (animeId) => {
 
 const handleAddToFavorites = async (animeId) => {
   const token = window.localStorage.getItem("token");
+  window.confirm("Dodano do listy")
 
   try {
     await axios.post(
@@ -66,7 +69,7 @@ const handleRemoveFromFavorites = async (animeId) => {
 
 const handleAddToIgnored = async (animeId) => {
   const token = window.localStorage.getItem("token");
-
+  window.confirm("Dodano do listy")
   try {
     await axios.post(
       "http://localhost:3000/api/users/ignored",

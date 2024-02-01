@@ -6,6 +6,7 @@ import "../styles/styles.css";
 const AnimeList = () => {
   const [animeList, setAnimeList] = useState([]);
   const [searchTitle, setSearchTitle] = useState("");
+  const [searchGenre, setSearchGenre] = useState("");
   const [sortOrder, setSortOrder] = useState("asc");
   const [page, setPage] = useState(1);
 
@@ -13,7 +14,7 @@ const AnimeList = () => {
     const fetchAnimeList = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:3000/api/anime/search?title=${searchTitle}&sortOrder=${sortOrder}&page=${page}`
+          `http://localhost:3000/api/anime/search?title=${searchTitle}&genre=${searchGenre}&sortOrder=${sortOrder}&page=${page}`
         );
         setAnimeList(response.data);
       } catch (error) {
@@ -22,10 +23,14 @@ const AnimeList = () => {
     };
 
     fetchAnimeList();
-  }, [searchTitle, sortOrder, page]);
+  }, [searchTitle, searchGenre, sortOrder, page]);
 
-  const handleSearchChange = (e) => {
+  const handleSearchTitleChange = (e) => {
     setSearchTitle(e.target.value);
+  };
+
+  const handleSearchGenreChange = (e) => {
+    setSearchGenre(e.target.value);
   };
 
   const handleSortChange = () => {
@@ -34,15 +39,22 @@ const AnimeList = () => {
 
   return (
     <div className="anime-list-container">
-      <h2 className="list-title">Lista Anime</h2>
+      <h2 className="list-title">Anime list</h2>
       <input
         type="text"
-        placeholder="Wyszukaj według tytułu"
+        placeholder="Search by title"
         value={searchTitle}
-        onChange={handleSearchChange}
+        onChange={handleSearchTitleChange}
         className="search-input"
       />
-      <button className="list-button" onClick={handleSortChange}>
+      <input
+        type="text"
+        placeholder="Search by genre"
+        value={searchGenre}
+        onChange={handleSearchGenreChange}
+        className="search-input"
+      />
+      <button onClick={handleSortChange} className="list-button">
         {sortOrder === "asc" ? "Descending" : "Ascending"}
       </button>
       <ul className="anime-list">

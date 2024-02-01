@@ -11,7 +11,7 @@ const port = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 
-mongoose.connect("mongodb://localhost:27017/Anime-List", {
+mongoose.connect("mongodb://root:example@localhost:27017/Anime-List?authSource=admin", {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });

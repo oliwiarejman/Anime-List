@@ -277,7 +277,7 @@ const AnimeDetails = () => {
           </form>
         </div>
       )}
-      <h3 className="reviews-heading">Reviews:</h3>
+      <h3 className="reviews-heading">Comments:</h3>
       <ul className="reviews-list">
         {reviews.map((review) => (
           <li key={review._id} className="review-item">
